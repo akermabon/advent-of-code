@@ -37,6 +37,10 @@ class FileSystem
     end
   end
 
+  def dir_sizes
+    @dir_paths.map(&method(:dir_size))
+  end
+
   def dir_size(path)
     content(path).reduce(0) do |sum, (key, value)|
       next sum + dir_size([path, key].join('.')) if value.is_a?(Hash)
@@ -44,15 +48,15 @@ class FileSystem
     end
   end
 
-  def dir_sub_100k_size
-    @dir_paths.map { |path| dir_size(path) }.filter { |size| size <= 100_000 }.sum
+  def dir_size_sub_100k
+    dir_sizes.filter { |size| size <= 100_000 }.sum
   end
 
   def delete_for_space(needed_space)
-    @dir_paths.map { |path| dir_size(path) }.filter { |size| size >= needed_space}.min
+    dir_sizes.filter { |size| size >= needed_space}.min
   end
 
-  def smallest_dir_to_free_space(target_space)
+  def smallest_dir_size_to_free_space(target_space)
     free_space = @total_space - @used_space
     needed_space = target_space - free_space
     delete_for_space(needed_space)
@@ -72,7 +76,7 @@ end
 fs = build_fs(rows)
 
 # part 1
-p fs.dir_sub_100k_size
+p fs.dir_size_sub_100k
 
 # part 2
-p fs.smallest_dir_to_free_space(30_000_000)
+p fs.smallest_dir_size_to_free_space(30_000_000)
