@@ -1,4 +1,4 @@
-rows = File.read(Dir.pwd + '/04/input.txt').split("\n")
+rows = File.read(File.dirname(__FILE__) + '/input.txt').split("\n")
 
 pairs = rows.map do |row|
   row.split(',').map do |pair|

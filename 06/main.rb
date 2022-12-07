@@ -1,4 +1,4 @@
-packet = File.read(Dir.pwd + '/06/input.txt')
+packet = File.read(File.dirname(__FILE__) + '/input.txt')
 
 def is_marker?(string)
   splitted = string.split('')

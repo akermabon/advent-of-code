@@ -1,4 +1,4 @@
-rounds = File.read(Dir.pwd + '/02/input.txt').gsub(' ', '').split("\n")
+rounds = File.read(File.dirname(__FILE__) + '/input.txt').gsub(' ', '').split("\n")
 
 # A/X = ROCK
 # B/Y = PAPER

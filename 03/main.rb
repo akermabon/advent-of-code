@@ -1,5 +1,5 @@
 require 'pry'
-items = File.read(Dir.pwd + '/03/input.txt').split("\n")
+items = File.read(File.dirname(__FILE__) + '/input.txt').split("\n")
 
 SCORES = ('a'..'z').each_with_index.each_with_object({}) { |(letter, index), hash| hash[letter] = index + 1 }
 ('A'..'Z').each_with_index { |letter, index| SCORES[letter] = index + 27 }

@@ -1,4 +1,4 @@
-rows = File.read(Dir.pwd + '/05/input.txt')
+rows = File.read(File.dirname(__FILE__) + '/input.txt')
 
 crates_string, instructions_string = rows.split("\n\n")
 

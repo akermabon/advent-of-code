@@ -1,4 +1,4 @@
-rows = File.read(Dir.pwd + '/01/input.txt').split("\n\n")
+rows = File.read(File.dirname(__FILE__) + '/input.txt').split("\n\n")
 
 def all_sorted_calories(rows)
   rows
