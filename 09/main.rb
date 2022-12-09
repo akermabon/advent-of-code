@@ -39,7 +39,7 @@ class Rope
   def initialize(moves, nb_knots)
     @moves = moves
     @nb_knots = nb_knots
-    @tail_moves = Set.new
+    @tail_used_cells = Set.new
     init_knots
     simulate
   end
@@ -49,7 +49,7 @@ class Rope
     @nb_knots.times { @knots << Knot.new }
     @head = @knots.first
     @tail = @knots.last
-    @tail_moves << @tail
+    @tail_used_cells << @tail
   end
 
   def close_enough?(diff)
@@ -64,7 +64,7 @@ class Rope
     diff = next_knot.diff(knot)
     return if close_enough?(diff)
 
-    @tail_moves << knot.to_s if @tail == knot
+    @tail_used_cells << knot.to_s if @tail == knot
     knot.x = calc_coord_from_diff(knot.x, diff.x) unless diff.x == 0
     knot.y = calc_coord_from_diff(knot.y, diff.y) unless diff.y == 0
   end
@@ -80,8 +80,8 @@ class Rope
     end
   end
 
-  def count_tail_moves
-    @tail_moves.count
+  def count_tail_used_cells
+    @tail_used_cells.count
   end
 end
 
@@ -91,7 +91,7 @@ moves = rows.map do |row|
 end
 
 # part 1
-p Rope.new(moves, 2).count_tail_moves
+p Rope.new(moves, 2).count_tail_used_cells
 
 # part 2
-p Rope.new(moves, 10).count_tail_moves
+p Rope.new(moves, 10).count_tail_used_cells
