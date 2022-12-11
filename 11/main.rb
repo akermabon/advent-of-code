@@ -3,12 +3,19 @@ rows = File.read(File.dirname(__FILE__) + '/input.txt').split("\n\n")
 
 ThrownItem = Struct.new(:worry, :monkey)
 
+MONKEY_RX = Regexp.new <<'MONKEY_RX'.gsub(/\s+/, ' ').strip
+  Starting items: (?<items>[\d, ]+) 
+  Operation: new = (?<operation>.*) 
+  Test: divisible by (?<divider>\d+) 
+  If true: throw to monkey (?<target_true>\d) 
+  If false: throw to monkey (?<target_false>\d)
+MONKEY_RX
+
 class Monkey
 
   attr_accessor :items, :divider, :nb_inspected, :relief
 
-  def initialize(id, items, operation, divider, target_true, target_false)
-    @id = id
+  def initialize(items, operation, divider, target_true, target_false)
     @items = items
     @operation = operation
     @divider = divider
@@ -36,10 +43,6 @@ class Monkey
     worry = (worry / 3).floor if @relief
     ThrownItem.new(worry, worry % @divider == 0 ? @target_true : @target_false)
   end
-
-  def to_s
-    "Monkey #{@id} - items: #{@items.join(', ')} - nb_inspected: #{@nb_inspected}"
-  end
 end
 
 class MonkeyBusiness
@@ -49,13 +52,14 @@ class MonkeyBusiness
 
   def parse_monkeys(rows)
     rows.map.with_index do |monkey_rows, idx|
-      items_row, op_row, test_row, if_true_row, if_false_row = monkey_rows.split("\n").slice(1..)
-      items = /Starting items: (.*)/.match(items_row).captures.first.split(', ').map(&:to_i)
-      operation = /Operation: new = (.*)/.match(op_row).captures.first
-      divider = /Test: divisible by (\d+)/.match(test_row).captures.first.to_i
-      target_true = /If true: throw to monkey (\d)/.match(if_true_row).captures.first.to_i
-      target_false = /If false: throw to monkey (\d)/.match(if_false_row).captures.first.to_i
-      Monkey.new(idx, items, operation, divider, target_true, target_false)
+      matches = MONKEY_RX.match(monkey_rows.gsub(/\s+/, ' ').strip)
+      Monkey.new(
+        matches[:items].split(', ').map(&:to_i),
+        matches[:operation],
+        matches[:divider].to_i,
+        matches[:target_true].to_i,
+        matches[:target_false].to_i
+      )
     end
   end
 
